@@ -21,19 +21,19 @@ services:
     networks:
       - app-network
 
-  ApiGateway:
+  api_gateway:
     build:
       context: ./ApiGateway
-      dockerfile: ApiGateway/Dockerfile  
+      dockerfile: Dockerfile  
     networks:
       - app-network
     ports:
       - "5002:5002"
 
-  ProductService:
+  product_service:
     build:
       context: ./ProductService
-      dockerfile: ProductService/Dockerfile  
+      dockerfile: Dockerfile  
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - DB_CONNECTION_STRING=Host=postgres;Port=5432;Database=BmbPlatformDb;Username=postgres;Password=123
@@ -46,10 +46,10 @@ services:
     ports:
       - "5000:5000"
 
-  OrderService:
+  order_service:
     build:
       context: ./OrderService
-      dockerfile: OrderService/Dockerfile 
+      dockerfile: Dockerfile 
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - DB_CONNECTION_STRING=Host=postgres;Port=5432;Database=BmbPlatformDb;Username=postgres;Password=123
@@ -62,7 +62,7 @@ services:
       - "5001:5001"
 
           
-  BmbPlatformUI:
+  bmb_platform_ui:
     build:
       context: ./BmbPlatformUI
       dockerfile: Dockerfile
@@ -71,7 +71,7 @@ services:
     networks:
       - app-network
     depends_on:
-      - ProductService
-      - OrderService
+      - product_service
+      - order_service
 
       
