@@ -16,6 +16,7 @@ export class AuthService {
   login(username: string, password: string): Observable<string> {
     // NOTE: in a real app, call HttpClient.post('/api/auth/login', { username, password })
     if (username === 'admin' && password === 'password') {
+      //token should match jwtSettings in my API gateway but for now its just dummy token
       const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock-payload.signature';
       localStorage.setItem(this.TOKEN_KEY, mockToken);
       return of(mockToken).pipe(delay(500)); // simulate network latency
