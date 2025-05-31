@@ -1,6 +1,6 @@
 @ProdcutService_HostAddress = http://localhost:5131
 
-GET {{ProdcutService_HostAddress}}/weatherforecast/
+GET {{ProdcutService_HostAddress}}/health/
 Accept: application/json
 
 ###

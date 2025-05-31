@@ -17,6 +17,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ProductDbContext>(option => option.UseNpgsql( Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")));
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(AddProductCommandHandler).Assembly));
+builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddNpgSql(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")!);
+
 
 var app = builder.Build();
 
@@ -68,5 +72,7 @@ productsGroup.MapDelete("/{id:int}", async (int id, IMediator mediator) =>
     await mediator.Send(new DeleteProductCommand { Id = id });
     return Results.NoContent();
 });
+
+app.MapHealthChecks("/health");
 app.Run();
 
