@@ -34,6 +34,13 @@ builder.Services.AddHealthChecks()
 
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var productContext = services.GetRequiredService<ProductDbContext>();
+    productContext.Database.Migrate();
+}
+
 
 if (app.Environment.IsDevelopment())
 {
