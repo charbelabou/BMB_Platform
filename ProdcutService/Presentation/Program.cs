@@ -20,39 +20,37 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Add
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-// Create a new product
-app.MapPost("/products", async (IMediator mediator, AddProductCommand command) =>
+var productsGroup = app.MapGroup("/products").WithTags("Products");
+// Create
+productsGroup.MapPost("/", async (IMediator mediator, AddProductCommand command) =>
 {
     var newId = await mediator.Send(command);
     return Results.Created($"/products/{newId}", new { Id = newId });
 });
 
-// Get all products
-app.MapGet("/products", async (IMediator mediator) =>
+// Get all
+productsGroup.MapGet("/", async (IMediator mediator) =>
 {
     var products = await mediator.Send(new GetAllProductsQuery());
     return Results.Ok(products);
 });
 
-// Get a specific product by ID
-app.MapGet("/products/{id:int}", async (int id, IMediator mediator) =>
+// Get by ID
+productsGroup.MapGet("/{id:int}", async (int id, IMediator mediator) =>
 {
     var product = await mediator.Send(new GetProductByIdQuery { Id = id });
     return Results.Ok(product);
 });
 
-// Update an existing product
-app.MapPut("/products/{id:int}", async (int id, IMediator mediator, UpdateProductRequestDto updatedDto) =>
+// Update
+productsGroup.MapPut("/{id:int}", async (int id, IMediator mediator, UpdateProductRequestDto updatedDto) =>
 {
-    // Map DTO to command
     var command = new UpdateProductCommand
     {
         Id = id,
@@ -64,8 +62,8 @@ app.MapPut("/products/{id:int}", async (int id, IMediator mediator, UpdateProduc
     return Results.NoContent();
 });
 
-// Delete a product
-app.MapDelete("/products/{id:int}", async (int id, IMediator mediator) =>
+// Delete
+productsGroup.MapDelete("/{id:int}", async (int id, IMediator mediator) =>
 {
     await mediator.Send(new DeleteProductCommand { Id = id });
     return Results.NoContent();
