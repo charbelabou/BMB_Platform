@@ -1,0 +1,92 @@
+# ——————————————————
+# Ignore build outputs (bin/ and obj/ everywhere)
+# ——————————————————
+**/bin/
+**/obj/
+**/publish/
+**/out/
+**/artifacts/
+
+# ——————————————————
+# Rider settings
+# ——————————————————
+.idea/
+*.sln.iml
+
+# ——————————————————
+# Visual Studio files
+# ——————————————————
+.vs/
+**/*.user
+**/*.suo
+**/*.vcxproj.user
+
+# ——————————————————
+# ASP.NET & Blazor-generated files
+# ——————————————————
+wwwroot/lib/            # if you restore client-side libraries into wwwroot
+wwwroot/css/site.min.css
+wwwroot/js/site.min.js
+
+# ——————————————————
+# NuGet packages folder
+# ——————————————————
+**/packages/
+
+# ——————————————————
+# EF Migrations (optional—I usually commit them, but you might not)
+# ——————————————————
+**/Migrations/
+
+# ——————————————————
+# User-specific files
+# ——————————————————
+*.rsuser
+*.userprefs
+*.userosscache
+
+# ——————————————————
+# Git for Windows
+# ——————————————————
+Thumbs.db
+desktop.ini
+
+# ——————————————————
+# OS-generated files
+# ——————————————————
+.DS_Store
+*.StackDump
+ehthumbs.db
+Icon?
+
+# ——————————————————
+# Docker artifacts (logs, override files, etc.)
+# ——————————————————
+docker-compose.override.yml
+**/*.log
+**/*.pid
+
+# ——————————————————
+# Node/npm (if you ever add an Angular/React client)
+# ——————————————————
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ——————————————————
+# Mac/Windows/Linux swap/temp files
+# ——————————————————
+*.swp
+*~
+
+# ——————————————————
+# Blazor-specific (scoped CSS build output)
+# ——————————————————
+obj/Debug/net*/scopedcss/
+obj/Release/net*/scopedcss/
+
+# ——————————————————
+# Lock file for NuGet packages (if you never want to commit it)
+# ——————————————————
+packages.lock.json
