@@ -2,6 +2,7 @@
 using Application.DTO.Response;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Persistance;
 
 namespace Application.Product.Query.Get;
@@ -9,10 +10,14 @@ namespace Application.Product.Query.Get;
 public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductDto>
 {
     private readonly ProductDbContext _context;
+    private readonly ILogger<GetProductByIdQueryHandler> _logger;
 
-    public GetProductByIdQueryHandler(ProductDbContext context)
+    
+
+    public GetProductByIdQueryHandler(ProductDbContext context, ILogger<GetProductByIdQueryHandler> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task<ProductDto> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
@@ -23,9 +28,10 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
 
         if (product == null)
         {
-            return null!; // Or throw exception / handle as desired
+            throw new Exception("Product not found");
         }
-
+        //this is a dummy logging to test serilog
+        _logger.LogInformation("Product found");
         return new ProductDto
         {
             Id = product.Id,
