@@ -64,7 +64,7 @@ services:
           
   bmb_platform_ui:
     build:
-      context: ./BmbPlatformUI
+      context: ./BmbPlatfromUI
       dockerfile: Dockerfile
     ports:
       - "80:80"
