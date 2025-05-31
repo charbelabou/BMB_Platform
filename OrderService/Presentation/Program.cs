@@ -1,4 +1,7 @@
 using Application.Order.Command.Add;
+using Infrastructure.Configurations;
+using Infrastructure.Contracts;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
 using Serilog;
@@ -31,6 +34,11 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Add
 builder.Services.AddHealthChecks();
 builder.Services.AddHealthChecks()
     .AddNpgSql(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")!);
+
+builder.Services.Configure<ProductServiceSettings>(
+    builder.Configuration.GetSection("ProductService"));
+
+builder.Services.AddHttpClient<IProductService, ProductService>();
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
