@@ -25,8 +25,12 @@ builder.Host.UseSerilog();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ProductDbContext>(option => option.UseNpgsql( Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")));
-
+builder.Services.AddDbContext<ProductDbContext>(options =>
+    options.UseNpgsql(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"), npgsqlOptions =>
+    {
+        npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory_ProductService");
+    })
+);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(AddProductCommandHandler).Assembly));
 builder.Services.AddHealthChecks();
 builder.Services.AddHealthChecks()

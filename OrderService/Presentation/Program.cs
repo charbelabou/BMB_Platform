@@ -1,3 +1,4 @@
+using Application.Order.Command.Add;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
 using Serilog;
@@ -9,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .Enrich.WithEnvironmentName()
-    .WriteTo.Console(new RenderedCompactJsonFormatter()) 
+    .WriteTo.Console(new RenderedCompactJsonFormatter())
     .CreateLogger();
 
 builder.Host.UseSerilog();
@@ -18,14 +19,26 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<OrderDbContext>(option => option.UseNpgsql( Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")));
 
-// builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(AddProductCommandHandler).Assembly));
+builder.Services.AddDbContext<OrderDbContext>(options =>
+    options.UseNpgsql(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"), npgsqlOptions =>
+    {
+        npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory_OrderService");
+    })
+);
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(AddOrderCommandHandler).Assembly));
 builder.Services.AddHealthChecks();
 builder.Services.AddHealthChecks()
     .AddNpgSql(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")!);
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var orderContext = services.GetRequiredService<OrderDbContext>();
+    orderContext.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
